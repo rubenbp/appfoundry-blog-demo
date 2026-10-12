@@ -1,16 +1,83 @@
 ---
+import { getCollection } from 'astro:content';
+import GameArt from '../components/GameArt.astro';
+import GameCard from '../components/GameCard.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
+
+const games = await getCollection('juegos');
+const featured = games.find((game) => game.data.featured) ?? games[0];
+const latest = [...games].sort((a, b) => b.data.year - a.data.year).slice(0, 4);
+const generations = [
+	{ label: '8 bits', note: 'Pocos colores, ideas enormes.' },
+	{ label: '16 bits', note: 'Más mundo para perderse.' },
+	{ label: '32 bits', note: 'Un salto a nuevas dimensiones.' },
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<SiteLayout>
+	<section class="hero shell">
+		<div class="hero__copy">
+			<p class="eyebrow"><span class="status-dot"></span> Archivo abierto · empieza aquí</p>
+			<h1>La partida<br />que <span>siempre</span><br />vuelve.</h1>
+			<p class="hero__lede">Un archivo vivo de videojuegos clásicos. Para descubrir esa joya que te perdiste y volver a donde lo dejaste.</p>
+			<div class="hero__actions">
+				<a class="button button--dark" href="/catalogo/">Abrir el catálogo <span aria-hidden="true">↗</span></a>
+				<a class="text-link" href="/sobre-rebobina/">Conoce el archivo <span aria-hidden="true">→</span></a>
+			</div>
+			<div class="hero__stamp"><span>REWIND<br />CLUB</span><span class="hero__stamp-star">✳</span></div>
+		</div>
+		<div class="hero__visual">
+			<div class="hero__visual-top"><span>SELECCIÓN DE LA CASA</span><span>R-001 / 1990</span></div>
+			<div class="hero__art-wrap"><GameArt visual={featured.data.visual} palette={featured.data.palette} large={true} /></div>
+			<div class="hero__feature">
+				<div>
+					<p class="eyebrow">La ficha destacada</p>
+					<h2>{featured.data.title}</h2>
+					<p>{featured.data.platform} <span aria-hidden="true">·</span> {featured.data.year}</p>
+				</div>
+				<a class="round-link" href={'/juegos/' + featured.id + '/'} aria-label={'Ver ficha de ' + featured.data.title}>↗</a>
+			</div>
+			<div class="hero__visual-foot"><span>01 — TODO EMPIEZA CON UN CARTUCHO</span><span>DESLIZA PARA EXPLORAR ↓</span></div>
+		</div>
+	</section>
+
+	<section class="intro-band">
+		<div class="shell intro-band__inner">
+			<p>NO BUSCAMOS EL PRÓXIMO ESTRENO.</p>
+			<p>Buscamos <span>ese juego</span> que aún tiene algo que contar.</p>
+			<a href="/sobre-rebobina/" aria-label="Descubre la idea del archivo">↗</a>
+		</div>
+	</section>
+
+	<section class="section shell" aria-labelledby="new-arrivals-title">
+		<div class="section-heading">
+			<div><p class="eyebrow">El archivo empieza a crecer</p><h2 id="new-arrivals-title">Un mando, mil mundos.</h2></div>
+			<a class="text-link" href="/catalogo/">Ver los {games.length} juegos <span aria-hidden="true">→</span></a>
+		</div>
+		<div class="game-grid">
+			{latest.map((game) => <GameCard game={game} />)}
+		</div>
+	</section>
+
+	<section class="generation-section">
+		<div class="shell generation-section__inner">
+			<div class="generation-intro"><p class="eyebrow">Tres épocas, infinitas partidas</p><h2>Cambia el píxel.<br /><span>Queda la magia.</span></h2><p>De los primeros saltos a los castillos imposibles: elige tu generación y empieza a explorar.</p></div>
+			<div class="generation-list">
+				{generations.map((generation, index) => (
+					<a class="generation-row" href={'/catalogo/?generacion=' + encodeURIComponent(generation.label)}>
+						<span class="generation-row__number">0{index + 1}</span>
+						<span class="generation-row__name">{generation.label}</span>
+						<span class="generation-row__note">{generation.note}</span>
+						<span class="generation-row__arrow" aria-hidden="true">↗</span>
+					</a>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<section class="closing-cta shell">
+		<div><p class="eyebrow">Tu próxima partida ya existe</p><h2>¿Le damos<br />a <span>start</span>?</h2></div>
+		<a class="button button--lime" href="/catalogo/">Elegir un juego <span aria-hidden="true">↗</span></a>
+		<div class="closing-cta__d-pad" aria-hidden="true"><span>⌃</span><span>◂</span><span>●</span><span>▸</span><span>⌄</span></div>
+	</section>
+</SiteLayout>
