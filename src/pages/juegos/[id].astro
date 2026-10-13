@@ -10,7 +10,9 @@ export async function getStaticPaths() {
 }
 
 const { game } = Astro.props;
-const { Content } = await render(game);
+const { Content, headings } = await render(game);
+const outline = headings.filter((heading) => heading.depth === 2);
+const readingTime = Math.max(1, Math.ceil((game.body ?? '').split(/\s+/).length / 200));
 const allGames = await getCollection('juegos');
 const related = allGames.filter((item) => item.id !== game.id && item.data.genre === game.data.genre).slice(0, 3);
 const selectedGames = related.length ? related : allGames.filter((item) => item.id !== game.id).slice(0, 3);
@@ -20,19 +22,23 @@ const selectedGames = related.length ? related : allGames.filter((item) => item.
 	<div class="detail-shell shell">
 		<nav class="breadcrumbs" aria-label="Ruta de navegación"><a href="/">Inicio</a><span aria-hidden="true">/</span><a href="/catalogo/">Catálogo</a><span aria-hidden="true">/</span><span aria-current="page">{game.data.title}</span></nav>
 		<section class="detail-hero">
-			<div class="detail-hero__art"><GameArt visual={game.data.visual} palette={game.data.palette} large={true} /></div>
+			<div class="detail-hero__art"><GameArt visual={game.data.visual} palette={game.data.palette} large={true} transitionId={game.id} /></div>
 			<div class="detail-hero__copy">
 				<p class="eyebrow"><span class="status-dot"></span> {game.data.generation} · {game.data.year}</p>
-				<h1>{game.data.title}</h1>
+				<h1 style={'view-transition-name: title-' + game.id}>{game.data.title}</h1>
 				<p class="detail-hero__lede">{game.data.platform} <span aria-hidden="true">/</span> {game.data.genre}</p>
+				<p class="detail-hero__summary">{game.data.summary}</p>
 				<div class="detail-hero__rating"><span aria-hidden="true">✳</span><strong>{game.data.rating.toFixed(1)}</strong><span>valoración de ejemplo</span></div>
 				<div class="detail-tags">{game.data.tags.map((tag) => <span>{tag}</span>)}</div>
 			</div>
 		</section>
+		<section class="game-highlights" aria-label="El juego en tres ideas" data-reveal>{game.data.highlights.map((highlight, index) => <div><span>0{index + 1}</span><strong>{highlight}</strong></div>)}</section>
 
 		<section class="detail-content">
-			<article class="prose"><Content /></article>
-			<aside class="fact-card" aria-label="Datos del juego">
+			<article class="prose"><p class="reading-note">FICHA DEL ARCHIVO <span>{readingTime} min de lectura</span></p><Content /></article>
+			<aside class="detail-sidebar">
+				<nav class="article-outline" aria-label="En esta ficha"><p class="eyebrow">En esta ficha</p>{outline.map((heading) => <a href={'#' + heading.slug}>{heading.text}<span aria-hidden="true">↘</span></a>)}</nav>
+				<div class="fact-card" aria-label="Datos del juego">
 				<div class="fact-card__top"><span>DATOS DE LA PARTIDA</span><span>R / {game.data.year}</span></div>
 				<dl>
 					<div><dt>Plataforma</dt><dd>{game.data.platform}</dd></div>
@@ -41,8 +47,11 @@ const selectedGames = related.length ? related : allGames.filter((item) => item.
 					<div><dt>Edición</dt><dd>{game.data.publisher}</dd></div>
 					<div><dt>Jugadores</dt><dd>{game.data.players}</dd></div>
 					<div><dt>Duración</dt><dd>{game.data.playtime}</dd></div>
+					<div><dt>Una sesión</dt><dd>{game.data.session}</dd></div>
+					<div><dt>Dificultad</dt><dd>{game.data.difficulty}</dd></div>
 				</dl>
-				<p class="fact-card__note">Duración orientativa para una primera partida.</p>
+				<p class="fact-card__note">Duración, dificultad y valoración orientativas de esta demo. El año corresponde a la edición indicada; puede variar por región.</p>
+				</div>
 			</aside>
 		</section>
 	</div>

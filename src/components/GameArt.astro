@@ -1,107 +1,21 @@
 ---
+import type { GameArtKey } from '../data/game-art';
+
 interface Props {
-	visual: 'mario' | 'sonic' | 'tetris' | 'street-fighter' | 'donkey-kong' | 'outrun' | 'zelda' | 'chrono-trigger' | 'castlevania';
-	palette: string;
-	large?: boolean;
+    visual: GameArtKey;
+    palette: string;
+    large?: boolean;
+    transitionId?: string;
 }
 
-const { visual, palette, large = false } = Astro.props;
+const { visual, palette, large = false, transitionId } = Astro.props;
 ---
 
-<div class:list={['game-art', palette, 'visual-' + visual, { 'game-art--large': large }]} aria-hidden="true">
-	<div class="game-art__shine"></div>
-	<span class="game-art__pixel game-art__pixel--one"></span>
-	<span class="game-art__pixel game-art__pixel--two"></span>
-	<span class="game-art__pixel game-art__pixel--three"></span>
-	<svg class="game-art__scene" viewBox="0 0 480 280" fill="none" xmlns="http://www.w3.org/2000/svg">
-		<g class="scene scene--mario">
-			<path d="M0 214 94 170l75 29 82-75 83 65 67-39 79 48v82H0v-66Z" fill="var(--art-shadow)" />
-			<path d="M0 239h480v41H0z" fill="var(--art-ink)" />
-			<path d="M0 232h480v8H0z" fill="var(--art-spark)" />
-			<path d="M78 186v-54h54v54h-13v-32H91v32H78ZM344 186v-63h58v63h-14v-38h-30v38h-14Z" fill="var(--art-ground)" />
-			<rect x="104" y="79" width="32" height="32" rx="3" fill="var(--art-spark)" /><path d="M119 87v14M112 94h14" stroke="var(--art-ink)" stroke-width="4" />
-			<rect x="300" y="104" width="30" height="30" rx="3" fill="var(--art-spark)" /><path d="M315 111v15M308 119h14" stroke="var(--art-ink)" stroke-width="3" />
-			<circle cx="226" cy="104" r="13" stroke="var(--art-spark)" stroke-width="6" />
-			<path d="M208 166h42v10h-42zM212 140h33v27h-33zM218 128h23v12h-23zM216 176h12v24h-12zM236 176h12v24h-12z" fill="var(--art-character)" />
-			<path d="M212 134h34v7h-34zM220 141h8v8h-8zM238 141h8v8h-8z" fill="var(--art-spark)" />
-			<path d="M203 177h14v8h-14zM248 177h14v8h-14z" fill="var(--art-ink)" />
-		</g>
-		<g class="scene scene--sonic">
-			<path d="M0 224h480v56H0z" fill="var(--art-shadow)" />
-			<path d="M0 245h480v35H0z" fill="var(--art-ground)" />
-			<path d="M0 264h480v16H0z" fill="var(--art-ink)" />
-			<path d="M70 244a95 95 0 0 1 190 0" stroke="var(--art-ink)" stroke-width="17" />
-			<path d="M88 244a77 77 0 0 1 154 0" stroke="var(--art-spark)" stroke-width="7" />
-			<circle cx="129" cy="142" r="12" stroke="var(--art-spark)" stroke-width="6" />
-			<circle cx="167" cy="125" r="12" stroke="var(--art-spark)" stroke-width="6" />
-			<circle cx="204" cy="142" r="12" stroke="var(--art-spark)" stroke-width="6" />
-			<path d="M269 145 295 92l15 35 35-30-8 49 42-7-35 31 29 24-53-3-15 38-17-40-41 18 18-39-31-23 43 0Z" fill="var(--art-character)" />
-			<circle cx="322" cy="141" r="24" fill="var(--art-spark)" />
-			<path d="M307 171h48l-12 27h-45z" fill="var(--art-character)" />
-			<path d="M292 199h35v12h-45zM342 199h39v12h-43z" fill="var(--art-ink)" />
-			<path d="M317 136h5v5h-5zM335 136h5v5h-5z" fill="var(--art-ink)" />
-		</g>
-		<g class="scene scene--tetris">
-			<path d="M85 232h72v18H85zM103 214h36v18h-36zM274 232h108v18H274zM292 214h72v18h-72z" fill="var(--art-ground)" />
-			<path d="M103 70h54v54h-54zM157 124h54v54h-54zM211 70h54v54h-54zM265 124h54v54h-54z" fill="var(--art-spark)" />
-			<path d="M103 124h54v54h-54zM211 124h54v54h-54zM265 70h54v54h-54z" fill="var(--art-character)" />
-			<path d="M157 70h54v54h-54zM211 178h54v54h-54zM319 178h54v54h-54z" fill="var(--art-ink)" />
-			<path d="M80 250h320v10H80z" fill="var(--art-shadow)" />
-		</g>
-		<g class="scene scene--outrun">
-			<path d="M0 199h480v81H0z" fill="var(--art-shadow)" />
-			<path d="m180 199 55 81h158l-62-81H180Z" fill="var(--art-ink)" />
-			<path d="m272 205 10 22h16l-9-22h-17ZM297 246l13 29h18l-12-29h-19Z" fill="var(--art-spark)" />
-			<path d="M87 179h45v20H87zM101 142h10v37h-10zM78 170h62v9H78z" fill="var(--art-ground)" />
-			<path d="M185 186h137l-17-31h-80l-40 31Z" fill="var(--art-character)" />
-			<path d="M207 155h87l-16-26h-46l-25 26Z" fill="var(--art-character)" />
-			<path d="M227 136h38v17h-38z" fill="var(--art-spark)" />
-			<circle cx="220" cy="190" r="16" fill="var(--art-ink)" /><circle cx="299" cy="190" r="16" fill="var(--art-ink)" />
-			<circle cx="220" cy="190" r="6" fill="var(--art-spark)" /><circle cx="299" cy="190" r="6" fill="var(--art-spark)" />
-		</g>
-		<g class="scene scene--street-fighter">
-			<path d="M0 234h480v46H0z" fill="var(--art-ink)" />
-			<path d="M0 215h120v19H0zM360 215h120v19H360z" fill="var(--art-ground)" />
-			<path d="m98 193 66-66 38 14-24 52-37 29h-42l-22-20 21-9Z" fill="var(--art-character)" />
-			<path d="m382 193-66-66-38 14 24 52 37 29h42l22-20-21-9Z" fill="var(--art-spark)" />
-			<path d="M193 79h94v8h-94zM231 51h18v65h-18zM198 106h84v8h-84z" fill="var(--art-ground)" />
-			<path d="M235 155h10v31h-10zM211 166h58v9h-58z" fill="var(--art-ink)" />
-		</g>
-		<g class="scene scene--zelda">
-			<path d="M0 221 82 178l58 31 87-69 73 59 66-43 114 67v57H0v-59Z" fill="var(--art-shadow)" />
-			<path d="M0 248 107 193l71 45 86-61 61 50 65-31 90 48v36H0v-32Z" fill="var(--art-ground)" />
-			<path d="M64 127h12v83H64zM54 127h32v11H54zM84 146h42v10H84zM116 156h10v44h-10z" fill="var(--art-spark)" />
-			<path d="M215 136h44v11h-44zM226 114h22v66h-22zM216 177h44v11h-44zM221 100h32v11h-32z" fill="var(--art-character)" />
-			<path d="M176 194h130v10H176zM190 204h100v10H190z" fill="var(--art-ink)" />
-			<circle cx="371" cy="82" r="24" fill="var(--art-spark)" />
-		</g>
-		<g class="scene scene--chrono-trigger">
-			<circle cx="240" cy="134" r="91" fill="var(--art-shadow)" />
-			<circle cx="240" cy="134" r="68" stroke="var(--art-spark)" stroke-width="12" />
-			<circle cx="240" cy="134" r="46" stroke="var(--art-character)" stroke-width="7" stroke-dasharray="18 12" />
-			<path d="M0 235h480v45H0z" fill="var(--art-ground)" />
-			<path d="M212 183h52v12h-52zM220 151h35v32h-35zM225 139h25v12h-25zM214 159l-18 27h15l18-19z" fill="var(--art-character)" />
-			<path d="M243 149 289 89l7 6-42 69-7-3-4-12Z" fill="var(--art-spark)" />
-			<path d="M214 194h18v31h-18zM244 194h18v31h-18z" fill="var(--art-ink)" />
-			<path d="M193 222h40v10h-40zM243 222h39v10h-39z" fill="var(--art-spark)" />
-		</g>
-		<g class="scene scene--donkey-kong">
-			<path d="M0 193 94 119l89 58 70-77 87 86 57-60 83 64v90H0v-87Z" fill="var(--art-shadow)" />
-			<path d="M0 229 104 169l76 44 83-54 76 55 79-39 62 39v57H0v-42Z" fill="var(--art-ground)" />
-			<path d="M70 238v-64M70 183 45 156M70 194l29-36M410 236v-70M410 183l-26-30M410 195l31-42" stroke="var(--art-ink)" stroke-width="10" />
-			<path d="M179 200h122v22H179zM193 177h93v23h-93zM207 149h65v28h-65zM220 132h42v17h-42z" fill="var(--art-character)" />
-			<path d="M185 184h-26v16h31M285 184h25v16h-30" fill="var(--art-character)" />
-			<path d="M218 147h10v10h-10zM251 147h10v10h-10zM228 163h24v6h-24z" fill="var(--art-spark)" />
-			<path d="M94 126h37v37H94zM101 133h23v23h-23z" fill="var(--art-spark)" />
-			<path d="M109 119h10v10h-10z" fill="var(--art-ink)" />
-		</g>
-		<g class="scene scene--castlevania">
-			<path d="M0 214h480v66H0z" fill="var(--art-ink)" />
-			<path d="M74 214V93h39V65h28v55h27v94h-16v-53h-62v53H74ZM304 214v-94h27V65h28v28h39v121h-16v-53h-62v53h-16Z" fill="var(--art-ground)" />
-			<path d="M203 98h74v9h-74zM216 80h48v18h-48zM230 63h20v17h-20zM185 127h110v9H185z" fill="var(--art-spark)" />
-			<path d="M231 166h18v48h-18zM215 174h14v27h-14zM251 174h14v27h-14z" fill="var(--art-character)" />
-			<path d="M42 111h9v9h-9zM414 103h9v9h-9zM390 143h9v9h-9zM91 49h9v9h-9z" fill="var(--art-spark)" />
-		</g>
-	</svg>
-	<div class="game-art__label"><span>REBOBINA · 01</span><span>PRESS START <i></i></span></div>
+<div class:list={['game-art', palette, 'visual-' + visual, { 'game-art--large': large }]} style={transitionId ? 'view-transition-name: art-' + transitionId : undefined} aria-hidden="true">
+    <div class="game-art__shine"></div>
+    <span class="game-art__pixel game-art__pixel--one"></span>
+    <span class="game-art__pixel game-art__pixel--two"></span>
+    <span class="game-art__pixel game-art__pixel--three"></span>
+    <img class="game-art__scene" src={'/art/' + visual + '.svg'} alt="" width="480" height="280" loading={large ? 'eager' : 'lazy'} decoding="async" />
+    <div class="game-art__label"><span>REBOBINA / ART</span><span>PRESS START <i></i></span></div>
 </div>

@@ -27,7 +27,7 @@ La marca mezcla papel de archivo, interfaces de consola y pequeños acentos de c
 | `--tomato` | `#EF7256` | Acento de marca y detalles cálidos |
 | `--line` | `#DCD8CE` | Bordes y separadores |
 
-Las ilustraciones usan una paleta complementaria: lima, azul, naranja, rosa, violeta y cielo. Cada juego tiene una escena vectorial propia en `GameArt.astro`; sus formas evocan su mundo y su género sin copiar carátulas ni capturas. Mantén el texto fuera de las ilustraciones para conservar contraste y proporción.
+Las ilustraciones usan una paleta complementaria: lima, azul, naranja, rosa, violeta y cielo. Cada juego tiene una escena vectorial propia en `public/art/`, compuesta en `GameArt.astro`; sus formas evocan su mundo y su género sin copiar carátulas ni capturas. Mantén el texto fuera de las ilustraciones para conservar contraste y proporción.
 
 ### Tipografía
 
@@ -51,7 +51,7 @@ Las familias web se cargan desde Google Fonts. Las pilas de respaldo permiten le
 - Escribe en español directo, cálido y concreto.
 - Habla de sensaciones de juego con ejemplos: rutas, sesiones, ritmo, exploración o juego local.
 - Evita exageraciones, jerga nostálgica vacía y afirmaciones que no ayudan a elegir.
-- Cada ficha incluye una descripción breve, «Por qué volver», «Una partida para…» y datos estructurados.
+- Cada ficha incluye una descripción breve, «Por qué volver», «Cómo se juega», «Tu primera partida», un perfil de jugador, «Ten en cuenta» y datos estructurados. Las tres ideas clave y el índice ayudan a decidir antes de leerlo todo.
 - Indica la edición o plataforma cuando cambie el contexto de la ficha.
 - En esta demo, las puntuaciones y duraciones son valores editoriales de ejemplo; no son reseñas ni mediciones verificadas.
 
@@ -69,5 +69,19 @@ Las familias web se cargan desde Google Fonts. Las pilas de respaldo permiten le
 - `GameCard.astro`: resumen navegable de una ficha.
 - `GameArt.astro`: ilustración vectorial específica para cada juego y paleta.
 - `SiteLayout.astro`: idioma, metadatos, estilos y estructura compartida.
+- `SiteMotion.astro`: revelado progresivo de secciones, una vez por visita.
+
+## Movimiento
+
+| Token | Valor | Uso |
+| --- | --- | --- |
+| `--motion-fast` | 160 ms | Hover, foco y salida |
+| `--motion-ui` | 240 ms | Selección, botones y entrada de página |
+| `--motion-reveal` | 560 ms | Aparición de secciones |
+| `--ease-settle` | `cubic-bezier(.2, .7, .2, 1)` | Curva común sin rebote |
+
+La portada presenta primero la ilustración, después el titular y por último las acciones. El revelado al desplazarse se reproduce una vez y usa una distancia de 18 px. Las tarjetas se escalonan 50 ms, hasta un máximo de 150 ms. Los filtros actualizan el contenido inmediatamente; cuando hay soporte, las transiciones de vista mantienen la continuidad de las imágenes. La ilustración y el título se relacionan visualmente al abrir una ficha mediante transiciones nativas entre documentos.
+
+Con movimiento reducido, todo el contenido permanece visible, las transiciones de navegación se desactivan y los adornos se detienen. Sin JavaScript, las fichas y enlaces siguen siendo accesibles y ningún contenido queda oculto. La mejora visual utiliza CSS y `IntersectionObserver`, sin una biblioteca de animación adicional.
 
 Los tokens viven en `src/styles/global.css`. Cuando cambies un color de marca, actualiza la tabla de esta guía y el token correspondiente en la hoja global.

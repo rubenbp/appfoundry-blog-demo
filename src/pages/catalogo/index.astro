@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import GameCard from '../../components/GameCard.astro';
 import SiteLayout from '../../layouts/SiteLayout.astro';
+import { generations } from '../../data/catalog';
 
 const games = [...await getCollection('juegos')].sort((a, b) => a.data.title.localeCompare(b.data.title, 'es'));
 const genres = [...new Set(games.map((game) => game.data.genre))].sort((a, b) => a.localeCompare(b, 'es'));
@@ -22,72 +23,21 @@ const platforms = [...new Set(games.map((game) => game.data.platform))].sort((a,
 				<div class="search-field"><span aria-hidden="true">⌕</span><input id="game-search" type="search" placeholder="Un título, una consola…" autocomplete="off" /><kbd>/</kbd></div>
 			</div>
 			<div class="platform-filter"><label for="platform-filter">Consola</label><select id="platform-filter"><option value="">Todas las consolas</option>{platforms.map((platform) => <option value={platform.toLowerCase()}>{platform}</option>)}</select></div>
+			<div class="platform-filter"><label for="generation-filter">Época</label><select id="generation-filter"><option value="">Todas las épocas</option>{generations.map((generation) => <option value={generation}>{generation}</option>)}</select></div>
+			<button class="filter-reset" id="filter-reset" type="button" disabled>Limpiar filtros <span aria-hidden="true">↺</span></button>
 		</div>
 		<div class="genre-filter" aria-label="Filtrar por género">
-			<button class="filter-chip is-selected" type="button" data-genre-filter="" aria-pressed="true">Todo el archivo <span>{games.length}</span></button>
-			{genres.map((genre) => <button class="filter-chip" type="button" data-genre-filter={genre.toLowerCase()} aria-pressed="false">{genre}</button>)}
+			<button class="filter-chip is-selected" type="button" data-genre-filter="" aria-label="Todo el archivo" aria-pressed="true">Todo el archivo <span data-genre-count>{games.length}</span></button>
+			{genres.map((genre) => <button class="filter-chip" type="button" data-genre-filter={genre.toLowerCase()} aria-label={genre} aria-pressed="false">{genre}<span data-genre-count>{games.filter((game) => game.data.genre === genre).length}</span></button>)}
 		</div>
 		<div class="catalog-results-bar"><h2 id="catalog-title">Juegos para volver</h2><p id="catalog-count" aria-live="polite">{games.length} juegos en el archivo</p></div>
 		<div class="game-grid game-grid--catalog" id="game-grid">
-			{games.map((game) => <GameCard game={game} />)}
+			{games.map((game, index) => <GameCard game={game} index={index} />)}
 		</div>
-		<p class="empty-state" id="empty-state" hidden>No encontramos esa partida. Prueba otro título o filtro.</p>
+		<div class="empty-state" id="empty-state" hidden><span class="empty-state__mark" aria-hidden="true">⌕</span><h3>Esa partida aún no está aquí.</h3><p>Prueba otro título o vuelve al archivo completo para descubrir algo distinto.</p><button class="button button--dark" id="empty-reset" type="button">Ver todos los juegos <span aria-hidden="true">↗</span></button></div>
 	</section>
 
 	<section class="catalog-note"><div class="shell"><span class="catalog-note__spark">✳</span><p>Cada ficha guarda lo esencial para elegir bien: de qué va, cuánto dura y con quién jugar.</p><a href="/sobre-rebobina/">Cómo construimos el archivo <span aria-hidden="true">↗</span></a></div></section>
 
-	<script>
-		import { filterGames as selectGames } from '../../lib/catalog-filter.mjs';
-
-		const cards = [...document.querySelectorAll('[data-game-card]')];
-		const search = document.querySelector('#game-search');
-		const platform = document.querySelector('#platform-filter');
-		const count = document.querySelector('#catalog-count');
-		const empty = document.querySelector('#empty-state');
-		const genreButtons = [...document.querySelectorAll('[data-genre-filter]')];
-		const games = cards.map((element) => ({
-			element,
-			title: element.dataset.title,
-			platform: element.dataset.platform,
-			genre: element.dataset.genre,
-			generation: element.dataset.generation,
-		}));
-		let activeGenre = '';
-		let activeGeneration = new URLSearchParams(window.location.search).get('generacion') ?? '';
-
-		function filterGames() {
-			const visibleGames = new Set(selectGames(games, {
-				query: search.value,
-				genre: activeGenre,
-				platform: platform.value,
-				generation: activeGeneration,
-			}).map((game) => game.element));
-			cards.forEach((card) => { card.hidden = !visibleGames.has(card); });
-			const visible = visibleGames.size;
-			count.textContent = visible + (visible === 1 ? ' juego en el archivo' : ' juegos en el archivo');
-			empty.hidden = visible !== 0;
-		}
-
-		search.addEventListener('input', filterGames);
-		platform.addEventListener('change', filterGames);
-		genreButtons.forEach((button) => {
-			button.addEventListener('click', () => {
-				activeGenre = button.dataset.genreFilter;
-				genreButtons.forEach((item) => {
-					const selected = item === button;
-					item.classList.toggle('is-selected', selected);
-					item.setAttribute('aria-pressed', String(selected));
-				});
-				filterGames();
-			});
-		});
-
-		if (activeGeneration) filterGames();
-		window.addEventListener('keydown', (event) => {
-			if (event.key === '/' && document.activeElement !== search && !['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
-				event.preventDefault();
-				search.focus();
-			}
-		});
-	</script>
+	<script>import '../../scripts/catalog';</script>
 </SiteLayout>
