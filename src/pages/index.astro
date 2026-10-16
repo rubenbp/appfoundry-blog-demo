@@ -75,7 +75,7 @@ const generations = [
 		<div class="shell generation-section__inner">
 			<div class="generation-intro" data-reveal><p class="eyebrow">Tres épocas, infinitas partidas</p><h2>Cambia el píxel.<br /><span>Queda la magia.</span></h2><p>De los primeros saltos a los castillos imposibles: elige tu generación y empieza a explorar.</p></div>
 			<div class="generation-list" data-reveal>
-				{generations.map((generation, index) => (
+    {generations.map((generation) => (
 					<a class="generation-row" href={'/catalogo/?generacion=' + encodeURIComponent(generation.label)}>
 						<span class="generation-row__number">{String(games.filter((game) => game.data.generation === generation.label).length).padStart(2, '0')}<small>JUEGOS</small></span>
 						<span class="generation-row__name">{generation.label}</span>
