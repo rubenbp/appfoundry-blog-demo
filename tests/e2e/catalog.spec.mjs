@@ -1,9 +1,14 @@
 import { expect, test } from './fixtures.mjs';
 
+/**
+ * @param {import('@playwright/test').Page} page
+ * @param {string} filename
+ */
 async function capture(page, filename) {
 	if (!process.env.CAPTURE_DEMO) return;
 	await page.locator('[data-reveal]').evaluateAll((elements) => elements.forEach((element) => element.classList.remove('reveal-pending')));
-	await page.locator('img').evaluateAll(async (images) => {
+	await page.evaluate(async () => {
+		const images = [...document.querySelectorAll('img')];
 		images.forEach((image) => { image.loading = 'eager'; });
 		await Promise.all(images.map((image) => image.decode()));
 	});
@@ -68,12 +73,17 @@ test('la ficha ampliada se lee en móvil con movimiento reducido', async ({ page
 	}
 	await expect(page.locator('.game-highlights strong')).toHaveCount(3);
 	await expect(page.locator('.detail-hero__art img')).toHaveJSProperty('complete', true);
-	expect(await page.locator('.detail-hero__art img').evaluate((image) => image.naturalWidth)).toBeGreaterThan(0);
-	const metrics = await page.evaluate(() => ({
-		overflow: document.documentElement.scrollWidth > window.innerWidth,
-		revealOpacity: getComputedStyle(document.querySelector('.game-highlights')).opacity,
-		pixelDuration: getComputedStyle(document.querySelector('.game-art__pixel')).animationDuration,
-	}));
+	expect(await page.locator('.detail-hero__art img').evaluate((image) => image instanceof HTMLImageElement ? image.naturalWidth : 0)).toBeGreaterThan(0);
+	const metrics = await page.evaluate(() => {
+		const highlights = document.querySelector('.game-highlights');
+		const pixel = document.querySelector('.game-art__pixel');
+		if (!highlights || !pixel) throw new Error('Missing game detail elements');
+		return {
+			overflow: document.documentElement.scrollWidth > window.innerWidth,
+			revealOpacity: getComputedStyle(highlights).opacity,
+			pixelDuration: getComputedStyle(pixel).animationDuration,
+		};
+	});
 	expect(metrics.overflow).toBe(false);
 	expect(metrics.revealOpacity).toBe('1');
 	expect(Number.parseFloat(metrics.pixelDuration)).toBeLessThan(0.001);

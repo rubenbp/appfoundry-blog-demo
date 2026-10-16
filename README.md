@@ -4,10 +4,11 @@ Demo de un catálogo editorial de videojuegos retro, creado con Astro para servi
 
 ## Empezar
 
-Requiere Node.js 22.12 o posterior y pnpm.
+La base de preparación usa Node.js **24.21.0** (`.node-version`), pnpm **12.4.1** (`packageManager`) y Python 3 para el servidor E2E. `engines.node` limita el proyecto a Node 24; Vercel selecciona su parche de esa rama. Las dependencias directas y transitivas están fijadas en `package.json` y `pnpm-lock.yaml`.
 
 ```sh
-pnpm install
+fnm use --install-if-missing
+npm exec --yes --package=pnpm@12.4.1 -- pnpm install --frozen-lockfile
 pnpm dev
 ```
 
@@ -21,13 +22,30 @@ pnpm preview
 ## Comprobaciones
 
 ```sh
+pnpm build
+pnpm lint
+pnpm typecheck
 pnpm test:unit
 pnpm test:e2e
 ```
 
-Las pruebas unitarias cubren búsqueda sin tildes y combinación de filtros. Playwright recorre el catálogo generado: búsqueda, filtros, acceso por género, cobertura de las tres épocas, limpieza de filtros y lectura en móvil con movimiento reducido. Las E2E requieren Python 3 para servir el build. Utilizan Chrome de macOS si está disponible, admiten `CHROME_PATH` y, en su ausencia, usan Chromium de Playwright (`pnpm exec playwright install chromium`).
+`fnm` es una opción para seleccionar Node; cualquier gestor que respete `.node-version` sirve. Si pnpm no está instalado, usa el prefijo `npm exec --yes --package=pnpm@12.4.1 --` también para los demás comandos. La instalación congelada debe terminar sin cambiar el lockfile. pnpm 12 conserva en él tanto el gestor como las dependencias. `pnpm-workspace.yaml` registra la excepción puntual de antigüedad de la versión exacta de ESLint seleccionada, sin desactivar esa comprobación para otros paquetes.
 
-En entornos que impiden acceder a localhost, `PLAYWRIGHT_OFFLINE=1 pnpm test:e2e` hace que Playwright responda a las peticiones de la página con los archivos de `dist/`. El navegador ejecuta el mismo HTML, CSS y JavaScript; las fuentes remotas usan su respaldo local. `CAPTURE_DEMO=1` añade capturas de portada, catálogo y ficha móvil a los resultados ignorados por Git.
+ESLint comprueba Astro, TypeScript y JavaScript del repositorio con los conjuntos recomendados de JS, TypeScript y Astro. `astro check` usa TypeScript 6.0.3 compatible con Astro 7.3.8, e incluye `.astro`, `.ts` y `.mjs`, pruebas y configuración, mediante `allowJs` y `checkJs`. Se excluyen los artefactos generados. La lógica JavaScript de filtrado lleva JSDoc y conserva sus tres pruebas unitarias.
+
+Playwright recorre el catálogo generado: búsqueda, filtros, acceso por género, cobertura de las tres épocas, limpieza, navegación y móvil con movimiento reducido. Añade una comprobación del SHA servido. `pnpm test:e2e` reconstruye el sitio y arranca su propio servidor Python en `127.0.0.1:4173`, que se detiene al terminar. Si el puerto está ocupado, falla: nunca reutiliza un servidor ajeno. Usa Chrome de macOS si está disponible, admite `CHROME_PATH` y, en su ausencia, usa Chromium de Playwright (`pnpm exec playwright install chromium`). Registra la ruta y versión efectiva del navegador con la evidencia.
+
+`PLAYWRIGHT_OFFLINE=1` conserva un modo diagnóstico que intercepta peticiones con archivos de `dist/` y bloquea fuentes remotas; aun así se exige servidor propio. No acredita el contrato E2E normal ni Vercel. `CAPTURE_DEMO=1` añade capturas de portada, catálogo y ficha móvil a los resultados ignorados por Git. Registra cualquier modo especial; para el contrato deja ambas variables sin definir.
+
+## Identificar la versión servida
+
+Cada build genera `/version.json` con `{ "sha": "<SHA completo>", "dirty": false }`. En local obtiene el SHA de Git y marca `dirty: true` si hay cambios sin incorporar. Una copia local modificada no acredita el commit limpio. En Vercel exige `VERCEL_GIT_COMMIT_SHA` y falla si falta o no es un SHA completo; usa deployments desde la integración Git.
+
+En Vercel, **Environment Variables → Enable access to System Environment Variables** debe estar activado. `vercel.json` ejecuta instalación congelada y build con pnpm 12.4.1 explícito: evita depender del pnpm que infiera Vercel a partir del formato del lockfile. El build imprime las versiones efectivas de Node y pnpm; conserva sus logs para observar el parche remoto.
+
+Tras el check Vercel correcto, abre la URL inmutable de Preview con tu sesión autorizada y consulta `/version.json`; exige SHA igual al head de la PR y `dirty: false`. Revisa el diff y el comportamiento antes de aceptar ese SHA en GitHub. Una persona realiza el merge. Después comprueba el deployment Production y el dominio público: el marcador debe identificar el SHA resultante del merge, que puede diferir del head tras squash. Consulta el marcador sin caché. Un HTTP 200 aislado o una prueba local no acredita publicación. No desactives Deployment Protection para acceder a Preview.
+
+Preparación: [issue #13 de la Factory](https://github.com/rubenbp/app-foundry/issues/13). El contrato y las evidencias se conservan en el repositorio de la Factory. Este trabajo queda separado de los futuros casos AFK; la introducción editorial y el filtro de dificultad siguen reservados para la evaluación.
 
 ## Rutas
 

@@ -1,3 +1,4 @@
+/** @param {unknown} value */
 function normalize(value = '') {
 	return String(value)
 		.normalize('NFD')
@@ -6,6 +7,17 @@ function normalize(value = '') {
 		.toLowerCase();
 }
 
+/**
+ * @typedef {{ title?: string, platform?: string, genre?: string, generation?: string }} CatalogGame
+ * @typedef {{ query?: string, genre?: string, platform?: string, generation?: string }} CatalogFilters
+ */
+
+/**
+ * @template {CatalogGame} T
+ * @param {T[]} games
+ * @param {CatalogFilters} filters
+ * @returns {T[]}
+ */
 export function filterGames(games, filters = {}) {
 	const query = normalize(filters.query);
 	const genre = normalize(filters.genre);
