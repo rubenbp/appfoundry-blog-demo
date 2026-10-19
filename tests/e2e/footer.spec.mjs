@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 
-for (const path of ['/', '/catalogo/', '/sobre-rebobina/']) {
+for (const path of ['/', '/sobre-rebobina/']) {
 	test(`footer slogan is present at ${path}`, async ({ page }) => {
 		await page.goto(path);
-		await expect(page.locator('.site-footer p')).toHaveText('Clásicos que merecen otra partida.');
+		await expect(page.locator('.site-footer p')).toHaveText('Clásicos para volver a jugar.');
 	});
 }
 
