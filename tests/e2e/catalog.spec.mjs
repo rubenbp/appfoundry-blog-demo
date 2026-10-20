@@ -47,21 +47,21 @@ test('todos los géneros tienen juegos en las tres épocas', async ({ page }) =>
 		await page.getByRole('button', { name: 'Todo el archivo', exact: true }).click();
 	}
 	await page.getByRole('button', { name: 'Limpiar filtros' }).click();
-	await expect(page.locator('[data-game-card]:visible')).toHaveCount(34);
+	await expect(page.locator('[data-game-card]:visible')).toHaveCount(35);
 	await capture(page, 'catalogo.png');
 });
 
 test('muestra la época de la URL y limpia todos los filtros', async ({ page }) => {
 	await page.goto('/catalogo/?generacion=8%20bits');
 	await expect(page.getByLabel('Época', { exact: true })).toHaveValue('8 bits');
-	await expect(page.locator('[data-game-card]:visible')).toHaveCount(8);
+	await expect(page.locator('[data-game-card]:visible')).toHaveCount(9);
 	await page.getByRole('searchbox').fill('un juego que no existe');
 	await expect(page.getByRole('heading', { name: 'Esa partida aún no está aquí.' })).toBeVisible();
 	await page.getByRole('button', { name: 'Ver todos los juegos' }).click();
 	await expect(page.getByRole('searchbox')).toHaveValue('');
 	await expect(page.getByLabel('Época', { exact: true })).toHaveValue('');
 	await expect(page).toHaveURL(/\/catalogo\/$/);
-	await expect(page.locator('[data-game-card]:visible')).toHaveCount(34);
+	await expect(page.locator('[data-game-card]:visible')).toHaveCount(35);
 });
 
 test('busca Suikoden, filtra PlayStation y abre su ficha con ilustración', async ({ page }) => {
@@ -86,6 +86,27 @@ test('busca Suikoden, filtra PlayStation y abre su ficha con ilustración', asyn
 	await expect(page.getByRole('heading', { name: 'Una partida para…' })).toBeVisible();
 	const image = page.locator('.detail-hero__art img');
 	await expect(image).toHaveAttribute('src', '/art/suikoden.svg');
+	await expect.poll(() => image.evaluate((element) => element instanceof HTMLImageElement ? element.naturalWidth : 0)).toBeGreaterThan(0);
+});
+
+test('encuentra Super Mario Bros en NES y muestra su ficha e importancia para Nintendo', async ({ page }) => {
+	await page.goto('/catalogo/');
+	await page.getByRole('searchbox', { name: 'Busca en el archivo' }).fill('super mario bros');
+	await page.getByLabel('Consola').selectOption('nes');
+	await page.getByLabel('Época', { exact: true }).selectOption('8 bits');
+	const game = page.getByRole('link', { name: 'Ver ficha de Super Mario Bros.' });
+	await expect(page.locator('[data-game-card]:visible')).toHaveCount(1);
+	await expect(game).toBeVisible();
+	await game.click();
+	await expect(page).toHaveURL(/\/juegos\/super-mario-bros\/$/);
+	await expect(page.getByRole('heading', { level: 1 })).toHaveText('Super Mario Bros.');
+	await expect(page.locator('.detail-hero__copy .eyebrow')).toContainText('8 bits · 1985');
+	await expect(page.locator('.fact-card')).toContainText('Nintendo R&D4');
+	await expect(page.locator('.fact-card')).toContainText('1–2 jugadores por turnos');
+	await expect(page.getByRole('heading', { level: 2, name: '¿Por qué Mario Bros es icónico de Nintendo?' })).toBeVisible();
+	await expect(page.locator('.prose')).toContainText('personaje reconocible, controles sencillos de aprender');
+	const image = page.locator('.detail-hero__art img');
+	await expect(image).toHaveAttribute('src', '/art/super-mario-bros.svg');
 	await expect.poll(() => image.evaluate((element) => element instanceof HTMLImageElement ? element.naturalWidth : 0)).toBeGreaterThan(0);
 });
 
