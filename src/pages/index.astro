@@ -23,10 +23,13 @@ const generations = [
 			<p class="hero__lede">Un archivo vivo de videojuegos clásicos. Para descubrir esa joya que te perdiste y volver a donde lo dejaste.</p>
 			<div class="hero__actions">
 				<a class="button button--dark" href="/catalogo/">Abrir el catálogo <span aria-hidden="true">↗</span></a>
+				<a class="button button--lime" href="/catalogo/" data-random-game data-game-ids={JSON.stringify(games.map((game) => game.id))}>Sorpréndeme <span aria-hidden="true">✳</span></a>
 				<a class="text-link" href="/sobre-rebobina/">Conoce el archivo <span aria-hidden="true">→</span></a>
 			</div>
-			<div class="hero__stamp"><span>REWIND<br />CLUB</span><span class="hero__stamp-star">✳</span></div>
-			<div class="hero__stats"><div><strong>{games.length}</strong><span>juegos con historia</span></div><div><strong>{genres.length}</strong><span>formas de jugar</span></div><div><strong>3</strong><span>épocas para volver</span></div></div>
+			<div class="hero__copy-bottom">
+				<div class="hero__stats"><div><strong>{games.length}</strong><span>juegos con historia</span></div><div><strong>{genres.length}</strong><span>formas de jugar</span></div><div><strong>3</strong><span>épocas para volver</span></div></div>
+				<div class="hero__stamp" aria-hidden="true"><span>REWIND<br />CLUB</span><span class="hero__stamp-star">✳</span></div>
+			</div>
 		</div>
 		<div class="hero__visual">
 			<div class="hero__visual-top"><span>SELECCIÓN DE LA CASA</span><span>R-001 / {featured.data.year}</span></div>
@@ -93,3 +96,18 @@ const generations = [
 		<div class="closing-cta__d-pad" aria-hidden="true"><span>⌃</span><span>◂</span><span>●</span><span>▸</span><span>⌄</span></div>
 	</section>
 </SiteLayout>
+
+<script>
+	const surprise = document.querySelector<HTMLAnchorElement>('[data-random-game]');
+	surprise?.addEventListener('click', (event) => {
+		let ids: string[] = [];
+		try {
+			ids = JSON.parse(surprise.dataset.gameIds ?? '[]');
+		} catch {
+			// The catalog link remains available if the list cannot be read.
+		}
+		if (!ids.length) return;
+		event.preventDefault();
+		window.location.assign(`/juegos/${encodeURIComponent(ids[Math.floor(Math.random() * ids.length)])}/`);
+	});
+</script>
