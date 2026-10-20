@@ -47,7 +47,7 @@ test('todos los géneros tienen juegos en las tres épocas', async ({ page }) =>
 		await page.getByRole('button', { name: 'Todo el archivo', exact: true }).click();
 	}
 	await page.getByRole('button', { name: 'Limpiar filtros' }).click();
-	await expect(page.locator('[data-game-card]:visible')).toHaveCount(35);
+	await expect(page.locator('[data-game-card]:visible')).toHaveCount(36);
 	await capture(page, 'catalogo.png');
 });
 
@@ -61,7 +61,27 @@ test('muestra la época de la URL y limpia todos los filtros', async ({ page }) 
 	await expect(page.getByRole('searchbox')).toHaveValue('');
 	await expect(page.getByLabel('Época', { exact: true })).toHaveValue('');
 	await expect(page).toHaveURL(/\/catalogo\/$/);
-	await expect(page.locator('[data-game-card]:visible')).toHaveCount(35);
+	await expect(page.locator('[data-game-card]:visible')).toHaveCount(36);
+});
+
+test('Wipeout aparece en conducción de PlayStation y abre su ficha ilustrada', async ({ page }) => {
+	await page.goto('/catalogo/');
+	await page.getByRole('button', { name: 'Conducción' }).click();
+	await page.getByLabel('Consola').selectOption('playstation');
+	await page.getByLabel('Época', { exact: true }).selectOption('32 bits');
+	await page.getByRole('searchbox', { name: 'Busca en el archivo' }).fill('wipeout');
+	const game = page.getByRole('link', { name: 'Ver ficha de Wipeout' });
+	await expect(page.locator('[data-game-card]:visible')).toHaveCount(1);
+	await expect(game.locator('.game-card__meta')).toContainText('1995');
+	await game.click();
+	await expect(page).toHaveURL(/\/juegos\/wipeout\/$/);
+	await expect(page.getByRole('heading', { level: 1 })).toHaveText('Wipeout');
+	await expect(page.locator('.fact-card')).toContainText('Psygnosis');
+	await expect(page.getByRole('heading', { name: 'Por qué volver' })).toBeVisible();
+	await expect(page.getByRole('heading', { name: 'Tu primera partida' })).toBeVisible();
+	const image = page.locator('.detail-hero__art img');
+	await expect(image).toHaveAttribute('src', '/art/wipeout.svg');
+	await expect.poll(() => image.evaluate((element) => element instanceof HTMLImageElement ? element.naturalWidth : 0)).toBeGreaterThan(0);
 });
 
 test('busca Suikoden, filtra PlayStation y abre su ficha con ilustración', async ({ page }) => {
