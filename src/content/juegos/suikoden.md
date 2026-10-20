@@ -1,6 +1,6 @@
 ---
 title: "Suikoden"
-year: 1995
+year: 1998
 platform: "PlayStation"
 generation: "32 bits"
 genre: "Rol japonés"
@@ -38,4 +38,4 @@ Quien disfrute de los juegos de rol por turnos con muchos personajes y una base 
 
 ## Ten en cuenta
 
-Esta ficha se refiere al Suikoden original de PlayStation, publicado en Japón en 1995; su llegada a otras regiones fue posterior. No describe las secuelas ni las reediciones. Algunos aliados tienen condiciones de reclutamiento fáciles de pasar por alto, y ciertos acontecimientos limitan cuándo puedes encontrarlos. La duración y la dificultad indicadas son orientativas para esta demo.
+Esta ficha muestra 1998 por criterio editorial, aunque el Suikoden original de PlayStation se publicó en Japón en 1995; su llegada a otras regiones fue posterior. No describe las secuelas ni las reediciones. Algunos aliados tienen condiciones de reclutamiento fáciles de pasar por alto, y ciertos acontecimientos limitan cuándo puedes encontrarlos. La duración y la dificultad indicadas son orientativas para esta demo.

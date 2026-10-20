@@ -70,12 +70,16 @@ test('busca Suikoden, filtra PlayStation y abre su ficha con ilustración', asyn
 	const game = page.getByRole('link', { name: 'Ver ficha de Suikoden' });
 	await expect(game).toBeVisible();
 	await expect(page.locator('[data-game-card]:visible')).toHaveCount(1);
+	await expect(game.locator('.game-card__meta')).toContainText('1998');
 	await page.getByLabel('Consola').selectOption('playstation');
 	await page.getByLabel('Época', { exact: true }).selectOption('32 bits');
 	await expect(game).toBeVisible();
 	await game.click();
 	await expect(page).toHaveURL(/\/juegos\/suikoden\/$/);
 	await expect(page.getByRole('heading', { level: 1 })).toHaveText('Suikoden');
+	await expect(page.locator('.detail-hero__copy .eyebrow')).toContainText('32 bits · 1998');
+	await expect(page.locator('.fact-card__top')).toContainText('1998');
+	await expect(page.locator('.prose')).toContainText('publicó en Japón en 1995');
 	await expect(page.locator('.detail-hero__lede')).toContainText('Rol japonés');
 	await expect(page.locator('.fact-card')).toContainText('Konami');
 	await expect(page.locator('.fact-card')).toContainText('1 jugador');
