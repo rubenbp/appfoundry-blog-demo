@@ -26,8 +26,10 @@ const generations = [
 				<a class="button button--lime" href="/catalogo/" data-random-game data-game-ids={JSON.stringify(games.map((game) => game.id))}>Sorpréndeme <span aria-hidden="true">✳</span></a>
 				<a class="text-link" href="/sobre-rebobina/">Conoce el archivo <span aria-hidden="true">→</span></a>
 			</div>
-			<div class="hero__stamp"><span>REWIND<br />CLUB</span><span class="hero__stamp-star">✳</span></div>
-			<div class="hero__stats"><div><strong>{games.length}</strong><span>juegos con historia</span></div><div><strong>{genres.length}</strong><span>formas de jugar</span></div><div><strong>3</strong><span>épocas para volver</span></div></div>
+			<div class="hero__copy-bottom">
+				<div class="hero__stats"><div><strong>{games.length}</strong><span>juegos con historia</span></div><div><strong>{genres.length}</strong><span>formas de jugar</span></div><div><strong>3</strong><span>épocas para volver</span></div></div>
+				<div class="hero__stamp" aria-hidden="true"><span>REWIND<br />CLUB</span><span class="hero__stamp-star">✳</span></div>
+			</div>
 		</div>
 		<div class="hero__visual">
 			<div class="hero__visual-top"><span>SELECCIÓN DE LA CASA</span><span>R-001 / {featured.data.year}</span></div>

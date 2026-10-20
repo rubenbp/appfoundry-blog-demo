@@ -75,7 +75,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .text-link { display: inline-flex; align-items: center; gap: 11px; width: fit-content; color: #4d4c46; font-size: 12px; font-weight: 700; }
 .text-link span { transition: transform 160ms ease; }
 .text-link:hover span { transform: translateX(4px); }
-.hero__stamp { position: absolute; right: 18px; bottom: -2px; display: flex; align-items: center; justify-content: space-between; width: 100px; height: 100px; padding: 14px 13px; border: 1px solid #c9c5ba; border-radius: 50%; transform: rotate(-11deg); color: #69665e; font: 500 8px/1.5 var(--font-mono); letter-spacing: .08em; }
+.hero__stamp { display: flex; align-items: center; justify-content: space-between; width: 100px; height: 100px; padding: 14px 13px; border: 1px solid #c9c5ba; border-radius: 50%; transform: rotate(-11deg); color: #69665e; font: 500 8px/1.5 var(--font-mono); letter-spacing: .08em; }
 .hero__stamp-star { align-self: flex-start; color: #e97458; font-size: 20px; }
 .hero__visual { overflow: hidden; padding: 18px; border: 1px solid rgb(23 25 23 / 8%); border-radius: 24px; background: #e6e2d8; box-shadow: 0 25px 70px rgb(64 59 42 / 9%); }
 .hero__visual-top, .hero__visual-foot { display: flex; justify-content: space-between; gap: 12px; color: #646158; font: 500 9px/1.4 var(--font-mono); letter-spacing: .08em; }
@@ -399,8 +399,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .game-card__link:focus-visible .game-art__scene { transform: translateY(-5px) scale(1.025); }
 .game-card__summary { min-height: 54px; margin: 0 0 15px; color: #67645b; font-size: 11px; line-height: 1.65; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
 .game-card h3 { margin-bottom: 7px; }
-.hero__stamp { bottom: 112px; right: 0; }
-.hero__stats { display: flex; gap: 32px; margin-top: 36px; padding-top: 22px; border-top: 1px solid var(--line); }
+.hero__copy-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; margin-top: 36px; padding-top: 22px; border-top: 1px solid var(--line); }
+.hero__stamp { flex: 0 0 100px; }
+.hero__stats { display: flex; gap: 32px; }
 .hero__stats div { display: flex; flex-direction: column; gap: 7px; }
 .hero__stats strong { font: 750 27px/1 var(--font-display); letter-spacing: -.05em; }
 .hero__stats span { color: var(--muted); font: 400 8px/1.5 var(--font-mono); }
@@ -477,7 +478,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 	.genre-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 700px) {
-	.hero__stats { margin-top: 28px; padding-top: 19px; gap: 30px; }
+	.hero__copy-bottom { margin-top: 28px; padding-top: 19px; }
+	.hero__stats { gap: 30px; }
 	.hero__stats strong { font-size: 25px; }
 	.hero__stats span { font-size: 7px; }
 	.genre-section { padding-block: 56px 62px; }
