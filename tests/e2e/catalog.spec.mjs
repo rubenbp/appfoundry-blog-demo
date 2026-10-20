@@ -94,13 +94,15 @@ test('encuentra Super Mario Bros en NES y muestra su ficha e importancia para Ni
 	await page.getByRole('searchbox', { name: 'Busca en el archivo' }).fill('super mario bros');
 	await page.getByLabel('Consola').selectOption('nes');
 	await page.getByLabel('Época', { exact: true }).selectOption('8 bits');
-	const game = page.getByRole('link', { name: 'Ver ficha de Super Mario Bros.' });
+	const game = page.getByRole('link', { name: 'Ver ficha de Super Mario Bros', exact: true });
 	await expect(page.locator('[data-game-card]:visible')).toHaveCount(1);
 	await expect(game).toBeVisible();
+	await expect(game.locator('.game-card__meta')).toContainText('1986');
 	await game.click();
 	await expect(page).toHaveURL(/\/juegos\/super-mario-bros\/$/);
-	await expect(page.getByRole('heading', { level: 1 })).toHaveText('Super Mario Bros.');
-	await expect(page.locator('.detail-hero__copy .eyebrow')).toContainText('8 bits · 1985');
+	await expect(page.getByRole('heading', { level: 1 })).toHaveText('Super Mario Bros');
+	await expect(page.locator('.detail-hero__copy .eyebrow')).toContainText('8 bits · 1986');
+	await expect(page.locator('.fact-card__top')).toContainText('1986');
 	await expect(page.locator('.fact-card')).toContainText('Nintendo R&D4');
 	await expect(page.locator('.fact-card')).toContainText('1–2 jugadores por turnos');
 	await expect(page.getByRole('heading', { level: 2, name: '¿Por qué Mario Bros es icónico de Nintendo?' })).toBeVisible();

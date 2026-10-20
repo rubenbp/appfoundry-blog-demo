@@ -1,6 +1,6 @@
 ---
-title: "Super Mario Bros."
-year: 1985
+title: "Super Mario Bros"
+year: 1986
 platform: "NES"
 generation: "8 bits"
 genre: "Plataformas"
@@ -18,7 +18,7 @@ highlights: ["Saltos con impulso", "Bloques y tuberías", "Mario y Luigi por tur
 tags: ["Reino Champiñón", "plataformas", "secretos"]
 ---
 
-Un bloque con una interrogación invita a probar el primer salto. En Super Mario Bros. el Reino Champiñón se descubre avanzando hacia la derecha: esquivar enemigos, encontrar monedas y llegar a la bandera antes de que se agote el tiempo. Esta ficha toma como referencia la edición de NES publicada en 1985 en Norteamérica; su estreno en Japón fue para Famicom ese mismo año.
+Un bloque con una interrogación invita a probar el primer salto. En Super Mario Bros. el Reino Champiñón se descubre avanzando hacia la derecha: esquivar enemigos, encontrar monedas y llegar a la bandera antes de que se agote el tiempo. Esta ficha toma como referencia la edición de NES; muestra 1986 como año editorial del archivo, no como fecha del estreno original para Famicom en Japón.
 
 ## Por qué volver
 
