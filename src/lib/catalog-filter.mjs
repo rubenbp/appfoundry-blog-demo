@@ -8,8 +8,8 @@ function normalize(value = '') {
 }
 
 /**
- * @typedef {{ title?: string, platform?: string, genre?: string, generation?: string }} CatalogGame
- * @typedef {{ query?: string, genre?: string, platform?: string, generation?: string }} CatalogFilters
+ * @typedef {{ title?: string, platform?: string, genre?: string, generation?: string, publisher?: string }} CatalogGame
+ * @typedef {{ query?: string, genre?: string, platform?: string, generation?: string, company?: string }} CatalogFilters
  */
 
 /**
@@ -23,6 +23,7 @@ export function filterGames(games, filters = {}) {
 	const genre = normalize(filters.genre);
 	const platform = normalize(filters.platform);
 	const generation = normalize(filters.generation);
+	const company = normalize(filters.company);
 
 	return games.filter((game) => {
 		const searchableText = normalize([game.title, game.platform, game.genre].filter(Boolean).join(' '));
@@ -32,6 +33,7 @@ export function filterGames(games, filters = {}) {
 			(!genre || normalize(game.genre) === genre) &&
 			(!platform || normalize(game.platform) === platform) &&
 			(!generation || normalize(game.generation) === generation)
+			&& (!company || normalize(game.publisher) === company)
 		);
 	});
 }

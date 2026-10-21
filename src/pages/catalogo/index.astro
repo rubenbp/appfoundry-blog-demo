@@ -7,6 +7,7 @@ import { generations } from '../../data/catalog';
 const games = [...await getCollection('juegos')].sort((a, b) => a.data.title.localeCompare(b.data.title, 'es'));
 const genres = [...new Set(games.map((game) => game.data.genre))].sort((a, b) => a.localeCompare(b, 'es'));
 const platforms = [...new Set(games.map((game) => game.data.platform))].sort((a, b) => a.localeCompare(b, 'es'));
+const companies = [...new Set(games.map((game) => game.data.publisher))].sort((a, b) => a.localeCompare(b, 'es'));
 ---
 
 <SiteLayout title="Catálogo — Rebobina" description="Explora videojuegos clásicos por consola, género y época.">
@@ -23,6 +24,7 @@ const platforms = [...new Set(games.map((game) => game.data.platform))].sort((a,
 				<div class="search-field"><span aria-hidden="true">⌕</span><input id="game-search" type="search" placeholder="Un título, una consola…" autocomplete="off" /><kbd>/</kbd></div>
 			</div>
 			<div class="platform-filter"><label for="platform-filter">Consola</label><select id="platform-filter"><option value="">Todas las consolas</option>{platforms.map((platform) => <option value={platform.toLowerCase()}>{platform}</option>)}</select></div>
+			<div class="platform-filter"><label for="company-filter">Compañía</label><select id="company-filter"><option value="">Todas las compañías</option>{companies.map((company) => <option value={company.toLowerCase()}>{company}</option>)}</select></div>
 			<div class="platform-filter"><label for="generation-filter">Época</label><select id="generation-filter"><option value="">Todas las épocas</option>{generations.map((generation) => <option value={generation}>{generation}</option>)}</select></div>
 			<button class="filter-reset" id="filter-reset" type="button" disabled>Limpiar filtros <span aria-hidden="true">↺</span></button>
 		</div>
