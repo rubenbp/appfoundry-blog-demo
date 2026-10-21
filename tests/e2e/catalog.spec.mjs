@@ -194,7 +194,11 @@ test('combina género y consola para abrir la ficha de Sonic', async ({ page }) 
 });
 
 test('filtra por compañía en combinación con otros filtros', async ({ page }) => {
+	await page.setViewportSize({ width: 1440, height: 900 });
 	await page.goto('/catalogo/');
+	const toolbar = page.locator('.catalog-toolbar');
+	const columnCount = await toolbar.evaluate((element) => getComputedStyle(element).gridTemplateColumns.split(' ').length);
+	expect(columnCount).toBe(5);
 	const company = page.getByLabel('Compañía');
 	await expect(company.locator('option')).toHaveCount(/** @type {number} */ (await company.locator('option').count()));
 	await company.selectOption('konami');
