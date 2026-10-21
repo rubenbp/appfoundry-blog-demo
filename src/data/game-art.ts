@@ -5,6 +5,7 @@ export const gameArtKeys = [
 	'dr-mario', 'puyo-puyo', 'puzzle-bobble', 'final-fantasy-vi', 'phantasy-star', 'final-fantasy-vii',
 	'kirby', 'punch-out', 'rc-pro-am', 'final-fantasy', 'crash', 'intelligent-qube',
 	'suikoden', 'super-mario-bros',
+	'wipeout',
 ] as const;
 
 export type GameArtKey = (typeof gameArtKeys)[number];

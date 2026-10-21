@@ -28,7 +28,7 @@ test('Sorpréndeme abre una ficha del archivo y permite alcanzar ambos extremos 
 		await page.goto('/');
 		const link = page.getByRole('link', { name: 'Sorpréndeme' });
 		const ids = JSON.parse(await link.getAttribute('data-game-ids') ?? '[]');
-		expect(ids).toHaveLength(35);
+		expect(ids).toHaveLength(36);
 		const id = ids.at(index);
 		await link.click();
 		await expect(page).toHaveURL(`/juegos/${id}/`);
