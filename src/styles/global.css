@@ -193,6 +193,37 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .catalog-note p { max-width: 560px; margin: 0; font-size: 13px; line-height: 1.6; }
 .catalog-note a { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; font-size: 10px; font-weight: 700; }
 
+.compare-hero { padding-block: 68px 48px; border-bottom: 1px solid var(--line); }
+.compare-hero h1 { max-width: 850px; margin: 22px 0 18px; font: 800 clamp(48px, 6vw, 78px)/1 var(--font-display); letter-spacing: -.075em; }
+.compare-hero h1 span { color: #e76e53; }
+.compare-hero > p:last-child { max-width: 600px; margin: 0; color: #5f5d56; font-size: 15px; line-height: 1.7; }
+.compare-section { padding-block: 42px 85px; }
+.compare-intro { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; margin-bottom: 22px; }
+.compare-intro h2 { margin: 0; font: 750 25px/1.2 var(--font-display); letter-spacing: -.045em; }
+.compare-intro p, .compare-note { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.compare-scroll-hint { display: none; color: var(--muted); font: 500 10px/1.5 var(--font-mono); }
+.compare-scroll { max-width: 100%; overflow-x: auto; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); }
+.compare-table { width: 100%; min-width: 970px; border-collapse: separate; border-spacing: 0; table-layout: fixed; }
+.compare-table th, .compare-table td { overflow-wrap: anywhere; vertical-align: top; }
+.compare-table__corner, .compare-table tbody th { width: 145px; text-align: left; }
+.compare-table__corner { padding: 22px 14px; color: var(--muted); font: 500 10px/1.4 var(--font-mono); text-transform: uppercase; }
+.compare-table__game { padding: 18px 12px 22px; border-left: 1px solid var(--line); text-align: left; }
+.compare-table__game label { display: block; margin-bottom: 8px; color: var(--muted); font: 500 10px/1.4 var(--font-mono); text-transform: uppercase; }
+.compare-table__game select { width: 100%; min-height: 44px; padding: 8px; border: 1px solid #d5d1c6; border-radius: 9px; background: white; color: var(--ink); font-size: 11px; }
+.compare-game { margin-top: 16px; }
+.compare-game__art { overflow: hidden; border-radius: 10px; }
+.compare-game__art .game-art { aspect-ratio: 1.43; }
+.compare-game__link { display: block; margin-top: 12px; font: 750 14px/1.3 var(--font-display); letter-spacing: -.025em; }
+.compare-game__link:hover { text-decoration: underline; text-underline-offset: 3px; }
+.compare-game__link span { color: #b9523d; }
+.compare-game__hint, .compare-game__empty { display: block; margin: 5px 0 0; color: var(--muted); font: 500 9px/1.5 var(--font-mono); }
+.compare-game__empty { margin-top: 22px; }
+.compare-table tbody tr > * { padding: 15px 12px; border-top: 1px solid var(--line); font-size: 11px; line-height: 1.55; }
+.compare-table tbody th { color: #56544d; font-weight: 700; }
+.compare-table tbody td { border-left: 1px solid var(--line); }
+.compare-table tbody tr:nth-child(even) { background: #f2efe7; }
+.compare-note { margin-top: 18px; }
+
 .detail-shell { padding-top: 26px; }
 .breadcrumbs { display: flex; flex-wrap: wrap; gap: 10px; color: #77746b; font: 500 9px/1.5 var(--font-mono); }
 .breadcrumbs a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
@@ -330,6 +361,12 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 	.catalog-note__spark { font-size: 23px; }
 	.catalog-note p { flex: 1; font-size: 11px; }
 	.catalog-note a { width: 100%; margin-left: 37px; font-size: 9px; }
+	.compare-hero { padding-block: 50px 32px; }
+	.compare-hero h1 { font-size: clamp(46px, 10vw, 68px); }
+	.compare-hero > p:last-child { font-size: 13px; }
+	.compare-section { padding-block: 30px 60px; }
+	.compare-intro { align-items: start; flex-direction: column; gap: 8px; }
+	.compare-scroll-hint { display: block; }
 	.detail-shell { padding-top: 19px; }
 	.detail-hero { grid-template-columns: 1fr; gap: 26px; padding-block: 25px 40px; }
 	.detail-hero__art { border-radius: 16px; }
