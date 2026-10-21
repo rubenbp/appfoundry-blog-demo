@@ -82,6 +82,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .hero__visual-top { padding: 1px 3px 13px; }
 .hero__art-wrap { overflow: hidden; border-radius: 16px; background: #d5ed77; }
 .hero__art-wrap .game-art { min-height: 285px; border-radius: 16px; }
+.hero__rotation-card { display: none; animation: retro-arrive 650ms cubic-bezier(.2,.8,.2,1) both; }
+.hero__rotation-card.is-active { display: block; }
+@keyframes retro-arrive { from { opacity: 0; transform: translateY(12px) scale(.985); filter: sepia(.5); } to { opacity: 1; transform: none; filter: none; } }
+@media (prefers-reduced-motion: reduce) { .hero__rotation-card { animation: none; } }
 .hero__feature { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 18px 4px 19px; }
 .hero__feature .eyebrow { font-size: 9px; }
 .hero__feature h2 { margin: 7px 0 4px; font: 750 21px/1.2 var(--font-display); letter-spacing: -.045em; }
