@@ -76,16 +76,12 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .text-link span { transition: transform 160ms ease; }
 .text-link:hover span { transform: translateX(4px); }
 .hero__stamp { position: relative; display: grid; place-items: center; width: 112px; height: 112px; flex: 0 0 112px; border: 1px solid #c9c5ba; border-radius: 50%; transform: rotate(-11deg); color: #69665e; }
-.hero__stamp::before, .hero__stamp::after { position: absolute; inset: 5px; border: 1px dashed #aaa69a; border-radius: 50%; content: ''; }
-.hero__stamp::after { inset: 13px; border-style: solid; border-color: rgb(239 114 86 / 55%); animation: stamp-spin 18s linear infinite; }
-.hero__stamp-orbit { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; border-radius: 50%; color: #77736a; font: 500 7px/1 var(--font-mono); letter-spacing: .12em; }
-.hero__stamp-orbit i { position: absolute; color: var(--tomato); font-size: 10px; font-style: normal; }
-.hero__stamp-orbit i:first-child { top: 14px; }
-.hero__stamp-orbit i:last-child { bottom: 14px; }
+.hero__stamp::before, .hero__stamp::after { position: absolute; inset: 5px 12px; border: 1px dashed #aaa69a; border-radius: 50%; content: ''; animation: stamp-orbit 8s ease-in-out infinite alternate; }
+.hero__stamp::after { inset: 12px 2px; border-style: solid; border-color: rgb(239 114 86 / 55%); animation-delay: -4s; }
 .hero__stamp-core { z-index: 1; display: grid; place-items: center; width: 55px; height: 55px; border-radius: 50%; background: var(--acid); color: var(--ink); text-align: center; font: 700 9px/1.2 var(--font-mono); letter-spacing: .06em; box-shadow: 0 3px 12px rgb(23 25 23 / 12%); }
 .hero__stamp-core span { position: absolute; right: 20px; top: 25px; color: var(--tomato); font-size: 11px; transform: translate(50%,-50%); }
-@keyframes stamp-spin { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .hero__stamp::after { animation: none; } }
+@keyframes stamp-orbit { from { transform: rotate(-18deg) scaleX(.78); } to { transform: rotate(18deg) scaleX(1.08); } }
+@media (prefers-reduced-motion: reduce) { .hero__stamp::before, .hero__stamp::after { animation: none; } }
 .hero__visual { overflow: hidden; padding: 18px; border: 1px solid rgb(23 25 23 / 8%); border-radius: 24px; background: #e6e2d8; box-shadow: 0 25px 70px rgb(64 59 42 / 9%); }
 .hero__visual-top, .hero__visual-foot { display: flex; justify-content: space-between; gap: 12px; color: #646158; font: 500 9px/1.4 var(--font-mono); letter-spacing: .08em; }
 .hero__visual-top { padding: 1px 3px 13px; }
