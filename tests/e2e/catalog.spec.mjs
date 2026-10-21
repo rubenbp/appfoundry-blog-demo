@@ -192,3 +192,15 @@ test('combina género y consola para abrir la ficha de Sonic', async ({ page }) 
 	await expect(page).toHaveURL(/\/juegos\/sonic-the-hedgehog-2\/$/);
 	await expect(page.getByRole('heading', { level: 1 })).toHaveText('Sonic the Hedgehog 2');
 });
+
+test('filtra por compañía en combinación con otros filtros', async ({ page }) => {
+	await page.goto('/catalogo/');
+	const company = page.getByLabel('Compañía');
+	await expect(company.locator('option')).toHaveCount(/** @type {number} */ (await company.locator('option').count()));
+	await company.selectOption('konami');
+	await page.getByLabel('Época', { exact: true }).selectOption('32 bits');
+	await page.getByRole('button', { name: 'Acción y exploración' }).click();
+	await expect(page.locator('[data-game-card]:visible')).toHaveCount(1);
+	await expect(page.getByRole('link', { name: 'Ver ficha de Castlevania: Symphony of the Night' })).toBeVisible();
+	await expect(page).toHaveURL(/compania=konami/);
+});

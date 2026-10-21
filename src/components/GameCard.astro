@@ -20,6 +20,7 @@ const { game, compact = false, index = 0 } = Astro.props;
 	data-platform={game.data.platform.toLowerCase()}
 	data-genre={game.data.genre.toLowerCase()}
 	data-generation={game.data.generation}
+	data-publisher={game.data.publisher.toLowerCase()}
 >
 	<a class="game-card__link" href={'/juegos/' + game.id + '/'} aria-label={'Ver ficha de ' + game.data.title}>
 		<GameArt visual={game.data.visual} palette={game.data.palette} transitionId={game.id} />

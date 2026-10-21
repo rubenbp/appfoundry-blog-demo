@@ -2,6 +2,7 @@ import { filterGames } from '../lib/catalog-filter.mjs';
 
 const search = document.querySelector<HTMLInputElement>('#game-search');
 const platform = document.querySelector<HTMLSelectElement>('#platform-filter');
+const company = document.querySelector<HTMLSelectElement>('#company-filter');
 const generation = document.querySelector<HTMLSelectElement>('#generation-filter');
 const count = document.querySelector<HTMLElement>('#catalog-count');
 const empty = document.querySelector<HTMLElement>('#empty-state');
@@ -13,20 +14,23 @@ const games = [...document.querySelectorAll<HTMLElement>('[data-game-card]')].ma
 	platform: element.dataset.platform,
 	genre: element.dataset.genre,
 	generation: element.dataset.generation,
+		publisher: element.dataset.publisher,
 }));
 
-if (search && platform && generation && count && empty && reset) {
+if (search && platform && company && generation && count && empty && reset) {
 	const params = new URLSearchParams(window.location.search);
 	const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
 	const platformNames = new Map([...platform.options].map((option) => [option.value, option.textContent]));
+	const companyNames = new Map([...company.options].map((option) => [option.value, option.textContent]));
 	let activeGenre = genreButtons.some((button) => button.dataset.genreFilter === params.get('genero')) ? params.get('genero')! : '';
 	let transition: { skipTransition: () => void } | undefined;
 	search.value = params.get('q') ?? '';
 	platform.value = [...platform.options].some((option) => option.value === params.get('consola')) ? params.get('consola')! : '';
 	generation.value = [...generation.options].some((option) => option.value === params.get('generacion')) ? params.get('generacion')! : '';
+	company.value = [...company.options].some((option) => option.value === params.get('compania')) ? params.get('compania')! : '';
 
 	function update() {
-		const context = { query: search!.value, platform: platform!.value, generation: generation!.value };
+		const context = { query: search!.value, platform: platform!.value, generation: generation!.value, company: company!.value };
 		const visible = new Set(filterGames(games, { ...context, genre: activeGenre }).map((game) => game.element));
 		games.forEach(({ element }) => { element.hidden = !visible.has(element); });
 		const inViewport = games.filter(({ element }) => !element.hidden && element.getBoundingClientRect().top < window.innerHeight);
@@ -45,11 +49,17 @@ if (search && platform && generation && count && empty && reset) {
 			option.disabled = available === 0;
 			option.textContent = platformNames.get(option.value) + ' (' + available + ')';
 		});
+		[...company!.options].forEach((option) => {
+			if (!option.value) return;
+			const available = filterGames(games, { company: option.value, generation: generation!.value }).length;
+			option.disabled = available === 0;
+			option.textContent = companyNames.get(option.value) + ' (' + available + ')';
+		});
 		count!.textContent = visible.size + (visible.size === 1 ? ' juego en el archivo' : ' juegos en el archivo');
 		empty!.hidden = visible.size !== 0;
-		reset!.disabled = !search!.value.trim() && !activeGenre && !platform!.value && !generation!.value;
+		reset!.disabled = !search!.value.trim() && !activeGenre && !platform!.value && !generation!.value && !company!.value;
 		const nextParams = new URLSearchParams();
-		Object.entries({ q: search!.value.trim(), genero: activeGenre, consola: platform!.value, generacion: generation!.value }).forEach(([key, value]) => {
+		Object.entries({ q: search!.value.trim(), genero: activeGenre, consola: platform!.value, generacion: generation!.value, compania: company!.value }).forEach(([key, value]) => {
 			if (value) nextParams.set(key, value);
 		});
 		const query = nextParams.toString();
@@ -66,6 +76,7 @@ if (search && platform && generation && count && empty && reset) {
 		search!.value = '';
 		platform!.value = '';
 		generation!.value = '';
+		company!.value = '';
 		activeGenre = '';
 		apply(true);
 	}
@@ -73,12 +84,14 @@ if (search && platform && generation && count && empty && reset) {
 	function changeContext() {
 		if (platform!.value && !filterGames(games, { platform: platform!.value, generation: generation!.value }).length) platform!.value = '';
 		if (activeGenre && !filterGames(games, { genre: activeGenre, platform: platform!.value, generation: generation!.value }).length) activeGenre = '';
+		if (company!.value && !filterGames(games, { company: company!.value, generation: generation!.value }).length) company!.value = '';
 		apply(true);
 	}
 
 	search.addEventListener('input', () => apply());
 	platform.addEventListener('change', changeContext);
 	generation.addEventListener('change', changeContext);
+	company.addEventListener('change', changeContext);
 	reset.addEventListener('click', clear);
 	document.querySelector('#empty-reset')?.addEventListener('click', () => { clear(); search.focus(); });
 	genreButtons.forEach((button) => button.addEventListener('click', () => { activeGenre = button.dataset.genreFilter ?? ''; apply(true); }));
