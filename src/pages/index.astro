@@ -6,7 +6,7 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 import { genres } from '../data/catalog';
 
 const games = await getCollection('juegos');
-const featured = games.find((game) => game.data.featured) ?? games[0];
+const rotation = [...games].sort(() => Math.random() - 0.5).slice(0, 5);
 const selection = ['crash-bandicoot', 'final-fantasy-vi', 'puzzle-bobble', 'super-metroid'].map((id) => games.find((game) => game.id === id)!);
 const generations = [
 	{ label: '8 bits', note: 'Pocos colores, ideas enormes.' },
@@ -32,15 +32,12 @@ const generations = [
 			</div>
 		</div>
 		<div class="hero__visual">
-			<div class="hero__visual-top"><span>SELECCIÓN DE LA CASA</span><span>R-001 / {featured.data.year}</span></div>
-			<div class="hero__art-wrap"><GameArt visual={featured.data.visual} palette={featured.data.palette} large={true} transitionId={featured.id} /></div>
-			<div class="hero__feature">
-				<div>
-					<p class="eyebrow">La ficha destacada</p>
-					<h2>{featured.data.title}</h2>
-					<p>{featured.data.platform} <span aria-hidden="true">·</span> {featured.data.year}</p>
-				</div>
-				<a class="round-link" href={'/juegos/' + featured.id + '/'} aria-label={'Ver ficha de ' + featured.data.title}>↗</a>
+			<div class="hero__visual-top"><span>SELECCIÓN DE LA CASA</span><span>5 JUEGOS · MODO ALEATORIO</span></div>
+			<div class="hero__rotation" data-feature-rotation aria-live="polite">
+			{rotation.map((game, index) => <div class:list={['hero__rotation-card', { 'is-active': index === 0 }]} data-feature-card>
+			<div class="hero__art-wrap"><GameArt visual={game.data.visual} palette={game.data.palette} large={true} transitionId={game.id} /></div>
+			<div class="hero__feature"><div><p class="eyebrow">La ficha destacada</p><h2>{game.data.title}</h2><p>{game.data.platform} <span aria-hidden="true">·</span> {game.data.year}</p></div><a class="round-link" href={'/juegos/' + game.id + '/'} aria-label={'Ver ficha de ' + game.data.title}>↗</a></div>
+			</div>)}
 			</div>
 			<div class="hero__visual-foot"><span>01 — TODO EMPIEZA CON UN CARTUCHO</span><span>DESLIZA PARA EXPLORAR ↓</span></div>
 		</div>
@@ -98,6 +95,16 @@ const generations = [
 </SiteLayout>
 
 <script>
+	const rotationElement = document.querySelector<HTMLElement>('[data-feature-rotation]');
+	if (rotationElement) {
+		const cards = [...rotationElement.querySelectorAll<HTMLElement>('[data-feature-card]')];
+		let current = 0;
+		window.setInterval(() => {
+			cards[current]?.classList.remove('is-active');
+			current = (current + 1) % cards.length;
+			cards[current]?.classList.add('is-active');
+		}, 5000);
+	}
 	const surprise = document.querySelector<HTMLAnchorElement>('[data-random-game]');
 	surprise?.addEventListener('click', (event) => {
 		let ids: string[] = [];
