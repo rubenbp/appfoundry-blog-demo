@@ -1,9 +1,12 @@
 import { expect, test } from './fixtures.mjs';
 
+/** @param {import('@playwright/test').Locator} selects */
+const selectedGames = (selects) => selects.evaluateAll((items) => items.map((item) => /** @type {HTMLSelectElement} */ (item).value));
+
 test('desde el menú compara cuatro juegos, cambia una columna y abre su ficha', async ({ page }) => {
 	await page.goto('/');
 	await page.getByRole('navigation', { name: 'Navegación principal' }).getByRole('link', { name: 'Comparador' }).click();
-	await expect(page).toHaveURL(/\/comparador\/$/);
+	await expect(page).toHaveURL(/\/comparador\/\?juego1=super-mario-world&juego2=sonic-the-hedgehog-2&juego3=&juego4=$/);
 	const selects = page.locator('[data-compare-select]');
 	await expect(selects).toHaveCount(4);
 	await expect(selects.nth(0)).toHaveValue('super-mario-world');
@@ -41,4 +44,53 @@ test('permite dejar un espacio vacío y comparar en móvil sin cortar columnas',
 	expect(dimensions).toEqual({ overflow: true, pageOverflow: false });
 	await scroll.evaluate((element) => { element.scrollLeft = element.scrollWidth; });
 	await expect(page.getByLabel('Juego 4')).toBeVisible();
+});
+
+test('la URL conserva las cuatro posiciones al recargar, compartir y navegar por el historial', async ({ page }) => {
+	await page.goto('/comparador/');
+	const selects = page.locator('[data-compare-select]');
+	expect([...new URL(page.url()).searchParams.entries()]).toEqual([
+		['juego1', 'super-mario-world'], ['juego2', 'sonic-the-hedgehog-2'], ['juego3', ''], ['juego4', ''],
+	]);
+	await selects.nth(0).selectOption('chrono-trigger');
+	await selects.nth(1).selectOption('');
+	await selects.nth(2).selectOption('tetris');
+	await selects.nth(3).selectOption('wipeout');
+	const sharedURL = page.url();
+	const params = new URL(sharedURL).searchParams;
+	expect([...params.entries()]).toEqual([
+		['juego1', 'chrono-trigger'], ['juego2', ''], ['juego3', 'tetris'], ['juego4', 'wipeout'],
+	]);
+	await page.reload();
+	await expect.poll(() => selectedGames(selects)).toEqual(['chrono-trigger', '', 'tetris', 'wipeout']);
+	await expect(page.locator('[data-compare-empty="1"]')).toBeVisible();
+	await expect(page.locator('[data-compare-field="genre"] [data-compare-cell="2"]')).toHaveText('Puzles');
+	await expect(page.locator('[data-compare-game="3"] .compare-game__link')).toHaveAttribute('href', '/juegos/wipeout/');
+	await page.goto('/comparador/');
+	await expect(selects.nth(0)).toHaveValue('super-mario-world');
+	await page.goto(sharedURL);
+	await expect.poll(() => selectedGames(selects)).toEqual(['chrono-trigger', '', 'tetris', 'wipeout']);
+	await selects.nth(2).selectOption('metroid');
+	await page.goBack();
+	await expect(selects.nth(2)).toHaveValue('tetris');
+	await expect(page.locator('[data-compare-field="genre"] [data-compare-cell="2"]')).toHaveText('Puzles');
+	await page.goForward();
+	await expect(selects.nth(2)).toHaveValue('metroid');
+});
+
+test('acepta comparaciones vacías o parciales y descarta identificadores desconocidos', async ({ page }) => {
+	await page.goto('/comparador/?juego1=&juego2=&juego3=&juego4=');
+	const selects = page.locator('[data-compare-select]');
+	await expect.poll(() => selectedGames(selects)).toEqual(['', '', '', '']);
+	await expect(page.locator('[data-compare-empty]')).toHaveCount(4);
+	await expect(page.locator('[data-compare-field="year"] [data-compare-cell="0"]')).toHaveText('—');
+	await page.goto('/comparador/?origen=amigo&juego3=tetris&juego4=no-existe#compare-title');
+	await expect.poll(() => selectedGames(selects)).toEqual(['', '', 'tetris', '']);
+	await expect(page.locator('[data-compare-game="2"] .compare-game__link')).toHaveAttribute('href', '/juegos/tetris/');
+	await expect(page.locator('[data-compare-empty="3"]')).toBeVisible();
+	await selects.nth(2).selectOption('');
+	const url = new URL(page.url());
+	expect(url.hash).toBe('#compare-title');
+	expect(url.searchParams.get('origen')).toBe('amigo');
+	expect([1, 2, 3, 4].map((number) => url.searchParams.get(`juego${number}`))).toEqual(['', '', '', '']);
 });

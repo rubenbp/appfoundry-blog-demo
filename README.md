@@ -51,7 +51,7 @@ Preparación: [issue #13 de la Factory](https://github.com/rubenbp/app-foundry/i
 
 - `/`: portada editorial con una selección del archivo.
 - `/catalogo/`: búsqueda por título, género y plataforma.
-- `/comparador/`: comparación de hasta cuatro juegos en columnas; los espacios libres se pueden añadir o vaciar desde sus selectores.
+- `/comparador/`: comparación de hasta cuatro juegos en columnas; los espacios libres se pueden añadir o vaciar desde sus selectores. La URL guarda cada posición como `juego1`, `juego2`, `juego3` y `juego4` (vacío significa espacio libre). Al entrar sin esos parámetros se muestran los dos juegos iniciales y se completa la URL.
 - `/juegos/<id>/`: ficha individual generada desde Markdown.
 - `/sobre-rebobina/`: propósito y principios del archivo.
 
